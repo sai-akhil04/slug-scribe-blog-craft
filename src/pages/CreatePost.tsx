@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -16,6 +15,9 @@ const CreatePost = () => {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+
+  // Generate slug in real-time as user types
+  const currentSlug = title ? generateSlug(title) : '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +51,7 @@ const CreatePost = () => {
     }
   };
 
+  // ... keep existing code (modules configuration)
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -94,10 +97,13 @@ const CreatePost = () => {
                   placeholder="Enter your blog post title..."
                   className="text-lg"
                 />
-                {title && (
-                  <p className="text-sm text-gray-500">
-                    Slug: <code className="bg-gray-100 px-1 rounded">{generateSlug(title)}</code>
-                  </p>
+                {currentSlug && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span>URL Preview:</span>
+                    <code className="bg-gray-100 px-2 py-1 rounded text-green-600 font-medium">
+                      /posts/{currentSlug}
+                    </code>
+                  </div>
                 )}
               </div>
 

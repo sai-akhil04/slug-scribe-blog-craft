@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -20,6 +19,10 @@ const EditPost = () => {
   const [loading, setLoading] = useState(true);
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+
+  // Generate slug in real-time as user types
+  const currentSlug = title ? generateSlug(title) : '';
+  const hasSlugChanged = post && currentSlug !== post.slug;
 
   useEffect(() => {
     if (slug) {
@@ -80,6 +83,7 @@ const EditPost = () => {
     }
   };
 
+  // ... keep existing code (modules configuration)
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -140,10 +144,25 @@ const EditPost = () => {
                   placeholder="Enter your blog post title..."
                   className="text-lg"
                 />
-                {title && (
-                  <p className="text-sm text-gray-500">
-                    New slug: <code className="bg-gray-100 px-1 rounded">{generateSlug(title)}</code>
-                  </p>
+                {currentSlug && (
+                  <div className="flex items-center gap-2 text-sm">
+                    {hasSlugChanged ? (
+                      <>
+                        <span className="text-gray-600">New URL:</span>
+                        <code className="bg-green-50 px-2 py-1 rounded text-green-600 font-medium border border-green-200">
+                          /posts/{currentSlug}
+                        </code>
+                        <span className="text-yellow-600 text-xs">(URL will change)</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-gray-600">Current URL:</span>
+                        <code className="bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">
+                          /posts/{currentSlug}
+                        </code>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
 
